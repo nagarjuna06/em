@@ -17,7 +17,7 @@ employeeRouter.use(jwtMiddleware);
 
 employeeRouter.post("", validate(employeeSchema), createEmployeeController);
 
-employeeRouter.get("/all", getEmployeesController);
+employeeRouter.get("", getEmployeesController);
 
 employeeRouter.put(
   "/upload",

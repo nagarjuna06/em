@@ -1,15 +1,26 @@
+import { MongooseError } from "mongoose";
 import employeeModel from "../schemas/employee.js";
 import cloudinaryService from "../services/cloudinary.js";
 
 export const createEmployeeController = async (req, res) => {
   try {
-    const employee = await employeeModel.create(req.body);
+    await employeeModel.create(req.body);
 
     return res.status(201).json({
       success: true,
-      data: employee,
+      message: "Employee created successfully",
     });
   } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        data: {
+          path: "email",
+        },
+        message: "Employee with the same email already exists",
+      });
+    }
+
     return res.status(500).json({
       success: false,
       message: "Failed to create employee",
@@ -29,21 +40,32 @@ export const uploadEmployeeImageController = async (req, res) => {
 
   const url = req.body.url;
 
-  if (url) {
-    await cloudinaryService.delete(url);
-  }
+  const imageUrl = await cloudinaryService.upload(image, url);
 
-  const imageUrl = await cloudinaryService.upload(image);
   return res.json({
     success: true,
     data: {
-      imageUrl,
+      url: imageUrl,
     },
   });
 };
 
 export const getEmployeesController = async (req, res) => {
-  const employees = await employeeModel.find();
+  const { q = "" } = req.query;
+  const search = q.toLowerCase();
+  const employees = await employeeModel.find({
+    $or: [
+      {
+        email: new RegExp(search, "i"),
+      },
+      {
+        name: new RegExp(search, "i"),
+      },
+      {
+        mobile: new RegExp(search, "i"),
+      },
+    ],
+  });
 
   return res.status(200).json({
     success: true,
@@ -52,15 +74,23 @@ export const getEmployeesController = async (req, res) => {
 };
 
 export const updateEmployeesController = async (req, res) => {
-  const updatedEmployee = await employeeModel.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  return res.status(200).json({
-    success: true,
-    data: updatedEmployee,
-  });
+  try {
+    await employeeModel.findByIdAndUpdate(req.params.id, req.body);
+    return res.status(200).json({
+      success: true,
+      message: "Employee updated successfully",
+    });
+  } catch (error) {
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        data: {
+          path: "email",
+        },
+        message: "Employee with the same email already exists",
+      });
+    }
+  }
 };
 
 export const deleteEmployeeController = async (req, res) => {

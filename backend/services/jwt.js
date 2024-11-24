@@ -9,7 +9,7 @@ class jwtService {
   }
 
   static verify(token) {
-    const { payload } = Jwt.verify(token, vars.secretKey);
+    const payload = Jwt.verify(token, vars.secretKey);
     return payload;
   }
 }

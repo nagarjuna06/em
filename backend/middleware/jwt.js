@@ -11,6 +11,7 @@ const jwtMiddleware = (req, res, next) => {
       });
     }
     const payload = jwtService.verify(token);
+
     req.currentUser = payload;
     next();
   } catch (error) {

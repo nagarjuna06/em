@@ -9,6 +9,9 @@ export const loginController = async (req, res) => {
     return res.status(400).json({
       success: false,
       message: "User not found",
+      data: {
+        path: "username",
+      },
     });
   }
 
@@ -16,6 +19,9 @@ export const loginController = async (req, res) => {
     return res.status(400).json({
       success: false,
       message: "Incorrect password",
+      data: {
+        path: "password",
+      },
     });
   }
 
@@ -43,4 +49,12 @@ export const registerController = async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
+};
+
+export const sessionController = async (req, res) => {
+  return res.json({
+    success: true,
+    message: "session established",
+    data: req.currentUser,
+  });
 };

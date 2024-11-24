@@ -8,9 +8,13 @@ cloudinary.config({
 });
 
 class cloudinaryService {
-  static async upload(image) {
+  static async upload(image, url) {
+    let public_id = `employee_db/${crypto.randomUUID()}`;
+
+    if (url) public_id = this.extractPublicId(url);
+
     const result = await cloudinary.uploader.upload(image.path, {
-      public_id: `employee_db/${crypto.randomUUID()}`,
+      public_id,
       resource_type: "image",
       transformation: [{ width: 1200, crop: "scale" }, { quality: "auto" }],
     });
@@ -22,7 +26,6 @@ class cloudinaryService {
   }
   static async delete(url) {
     const publicId = this.extractPublicId(url);
-
     await cloudinary.uploader.destroy(publicId);
   }
 }

@@ -1,35 +1,49 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
+import Home from "./pages/dashboard/Home";
+import Login from "./pages/Login";
+import Layout from "./pages/layout";
+import DashboardLayout from "./pages/dashboard/layout";
+import EmployeesList from "./pages/dashboard/EmployeesList";
+import Authenticate from "./auth/authenticate";
 
-function App() {
-  const [count, setCount] = useState(0)
+const router = createBrowserRouter([
+  {
+    element: <Layout />,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="/dashboard" />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        element: <Authenticate />,
+        children: [
+          {
+            element: <DashboardLayout />,
+            children: [
+              {
+                path: "/dashboard",
+                element: <Home />,
+              },
+              {
+                path: "/dashboard/employees-list",
+                element: <EmployeesList />,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App = () => <RouterProvider router={router} />;
 
-export default App
+export default App;

@@ -22,7 +22,7 @@ const employeeSchema = Schema(
       required: true,
     },
     course: {
-      type: String,
+      type: Array,
       required: true,
     },
   },

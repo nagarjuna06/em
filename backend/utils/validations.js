@@ -8,7 +8,7 @@ export const employeeSchema = yup
     mobile: yup.string().required(),
     designation: yup.string().oneOf(["HR", "Manager", "Sales"]).required(),
     gender: yup.string().oneOf(["M", "F"]).required(),
-    course: yup.string().required(),
+    course: yup.array(yup.string()).required(),
   })
   .noUnknown(true);
 
