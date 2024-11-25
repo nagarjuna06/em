@@ -1,7 +1,7 @@
 import { AtSignIcon, PhoneIcon, User2Icon } from "lucide-react";
 import Button from "./ui/button";
 import Dialog from "./ui/dialog";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   courseOptions,
@@ -91,17 +91,12 @@ const EmployeeDialog = ({
     shouldFocusError: true,
     defaultValues: {
       course: [],
+      image: undefined,
       ...defaultValues,
     },
     resolver: yupResolver(employeeSchema),
   });
   const image = watch("image");
-
-  useEffect(() => {
-    if (!open) {
-      reset();
-    }
-  }, [open, reset]);
 
   const onSubmit = async (data) => {
     let res;
@@ -149,6 +144,7 @@ const EmployeeDialog = ({
 
   return (
     <Dialog
+      onClose={reset}
       hideCloseBtn={createLoading || uploadLoading || updateLoading}
       open={open}
       setOpen={setOpen}
