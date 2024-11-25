@@ -52,17 +52,16 @@ export const uploadEmployeeImageController = async (req, res) => {
 
 export const getEmployeesController = async (req, res) => {
   const { q = "" } = req.query;
-  const search = q.toLowerCase();
   const employees = await employeeModel.find({
     $or: [
       {
-        email: new RegExp(search, "i"),
+        email: new RegExp(q, "i"),
       },
       {
-        name: new RegExp(search, "i"),
+        name: new RegExp(q, "i"),
       },
       {
-        mobile: new RegExp(search, "i"),
+        mobile: new RegExp(q, "i"),
       },
     ],
   });
