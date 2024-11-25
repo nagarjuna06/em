@@ -57,8 +57,9 @@ const Input = ({
             })}
             defaultValue={placeholder}
             {...register}
+            {...props}
           >
-            <option disabled>{placeholder}</option>
+            {placeholder && <option disabled>{placeholder}</option>}
             {options?.map((e, i) => (
               <option value={e.value} key={i}>
                 {e.label}

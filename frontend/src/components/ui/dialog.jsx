@@ -7,13 +7,11 @@ const Dialog = ({
   open,
   hideCloseBtn = false,
   setOpen,
-  onClose = () => {},
   children,
   className,
 }) => {
   const handleClose = (e) => {
     e.stopPropagation();
-    onClose();
     setOpen(false);
   };
 

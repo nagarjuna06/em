@@ -9,7 +9,7 @@ export const apiUpdateEmployee = (id, data) =>
 
 export const apiDeleteEmployee = (id) => Axios.delete(`/employees/${id}`);
 
-export const apiGetEmployees = (q) =>
+export const apiGetEmployees = (params = {}) =>
   Axios.get("/employees", {
-    params: { q },
+    params,
   });

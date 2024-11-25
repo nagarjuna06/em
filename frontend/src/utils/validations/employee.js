@@ -62,3 +62,72 @@ export const courseOptions = [
     value: "M.Tech",
   },
 ];
+
+export const employeeTableHeadings = [
+  {
+    label: "ID",
+    value: "_id",
+    sort: true,
+  },
+  {
+    label: "Image",
+    value: "image",
+  },
+  {
+    label: "Name",
+    value: "name",
+    sort: true,
+  },
+  {
+    label: "Email",
+    value: "email",
+    sort: true,
+  },
+  {
+    label: "Mobile No",
+  },
+  {
+    label: "Designation",
+  },
+  {
+    label: "Gender",
+  },
+  {
+    label: "Course",
+  },
+  {
+    label: "Created At",
+    value: "createdAt",
+    sort: true,
+  },
+  // {
+  //   label: "Updated At",
+  //   value: "updatedAt",
+  //   sort: true,
+  // },
+  {
+    label: "Edit",
+  },
+  {
+    label: "Delete",
+  },
+];
+
+export const limitOptions = [
+  {
+    label: "5",
+    value: 5,
+  },
+  {
+    label: "10",
+    value: 10,
+  },
+  {
+    label: "20",
+    value: 20,
+  },
+  {
+    label: "50",
+    value: 50,
+  },
+];

@@ -1,4 +1,3 @@
-import { MongooseError } from "mongoose";
 import employeeModel from "../schemas/employee.js";
 import cloudinaryService from "../services/cloudinary.js";
 
@@ -51,8 +50,9 @@ export const uploadEmployeeImageController = async (req, res) => {
 };
 
 export const getEmployeesController = async (req, res) => {
-  const { q = "" } = req.query;
-  const employees = await employeeModel.find({
+  let { q = "", page, orderBy = "_id", order = "ASC", limit } = req.query;
+
+  const query = {
     $or: [
       {
         email: new RegExp(q, "i"),
@@ -64,11 +64,34 @@ export const getEmployeesController = async (req, res) => {
         mobile: new RegExp(q, "i"),
       },
     ],
-  });
+  };
+  const sort = order == "DESC" ? -1 : 1;
+
+  page = parseInt(page) || 1;
+
+  limit = parseInt(limit) || 10;
+
+  const skip = limit * page - limit;
+
+  const employees = await employeeModel
+    .find(query)
+    .sort({ [orderBy]: sort })
+    .limit(limit)
+    .skip(skip);
+
+  const total = await employeeModel.countDocuments(query);
+
+  const pages = Math.round(total / limit);
 
   return res.status(200).json({
     success: true,
     data: employees,
+    meta: {
+      total,
+      pages,
+      page,
+      limit,
+    },
   });
 };
 

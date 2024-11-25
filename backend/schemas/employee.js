@@ -1,7 +1,9 @@
 import { model, Schema } from "mongoose";
+import counterModel from "./counter.js";
 
 const employeeSchema = Schema(
   {
+    _id: { type: Number },
     name: String,
     email: {
       type: String,
@@ -25,9 +27,12 @@ const employeeSchema = Schema(
       type: Array,
       required: true,
     },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
-    timestamps: true,
     versionKey: false,
     id: true,
     toJSON: {
@@ -38,6 +43,27 @@ const employeeSchema = Schema(
     },
   }
 );
+
+employeeSchema.pre("save", async function (next) {
+  const employee = this;
+
+  if (!employee._id) {
+    try {
+      const counter = await counterModel.findOneAndUpdate(
+        { _id: "employee" },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+      );
+
+      employee._id = counter.seq;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  } else {
+    next();
+  }
+});
 
 const employeeModel = model("employee", employeeSchema);
 

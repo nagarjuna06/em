@@ -4,6 +4,8 @@ import toast from "react-hot-toast";
 
 const useApi = (cb, options = { success: false, failure: false }) => {
   const [data, setData] = useState();
+  const [meta, setMeta] = useState(undefined);
+
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -17,6 +19,8 @@ const useApi = (cb, options = { success: false, failure: false }) => {
         toast.success(res.data.message);
       }
       setData(res.data.data);
+      setMeta(res.data.meta);
+
       return res.data;
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -34,9 +38,10 @@ const useApi = (cb, options = { success: false, failure: false }) => {
   const refetch = async (...args) => {
     const res = await cb(...args);
     setData(res.data.data);
+    setMeta(res.data.meta);
   };
 
-  return { fn, refetch, loading, data, error };
+  return { fn, refetch, loading, data, error, meta };
 };
 
 export default useApi;

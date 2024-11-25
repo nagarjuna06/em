@@ -11,14 +11,23 @@ class cloudinaryService {
   static async upload(image, url) {
     let public_id = `employee_db/${crypto.randomUUID()}`;
 
-    if (url) public_id = this.extractPublicId(url);
+    if (url) {
+      public_id = this.extractPublicId(url);
+    }
 
-    const result = await cloudinary.uploader.upload(image.path, {
-      public_id,
-      resource_type: "image",
-      transformation: [{ width: 1200, crop: "scale" }, { quality: "auto" }],
-    });
-    return result.secure_url;
+    console.log(public_id);
+
+    try {
+      const result = await cloudinary.uploader.upload(image.path, {
+        public_id,
+        resource_type: "image",
+        transformation: [{ width: 1200, crop: "scale" }, { quality: "auto" }],
+      });
+      return result.secure_url;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
   static extractPublicId(url) {
     const match = url.match(/\/image\/upload\/(?:v\d+\/)?([^\.]+)/);

@@ -1,7 +1,7 @@
 import { AtSignIcon, PhoneIcon, User2Icon } from "lucide-react";
 import Button from "./ui/button";
 import Dialog from "./ui/dialog";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   courseOptions,
@@ -21,7 +21,7 @@ import {
 import cn from "../utils/cn";
 import Spinner from "./ui/spinner";
 
-const Upload = ({ register, error, value, loading, onChange }) => {
+const Upload = ({ register, value = undefined, error, loading, onChange }) => {
   return (
     <div className="form-control">
       <label className="cursor-pointer">
@@ -96,6 +96,13 @@ const EmployeeDialog = ({
     },
     resolver: yupResolver(employeeSchema),
   });
+
+  useEffect(() => {
+    if (purpose == "Create") {
+      reset(undefined);
+    }
+  }, [open]);
+
   const image = watch("image");
 
   const onSubmit = async (data) => {
@@ -109,7 +116,7 @@ const EmployeeDialog = ({
 
     if (res.success) {
       setOpen(false);
-      cb();
+      await cb();
     } else {
       setError(res.data.path, { message: res.message });
     }
@@ -120,7 +127,6 @@ const EmployeeDialog = ({
 
   const handleChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
 
     if (!file) return;
 
@@ -132,7 +138,10 @@ const EmployeeDialog = ({
     }
     const fromData = new FormData();
     fromData.append("image", file);
-    fromData.append("url", image);
+
+    if (image) {
+      fromData.append("url", image);
+    }
 
     const res = await uploadApiRequest(fromData);
 
@@ -144,9 +153,9 @@ const EmployeeDialog = ({
 
   return (
     <Dialog
-      onClose={reset}
       hideCloseBtn={createLoading || uploadLoading || updateLoading}
       open={open}
+      onClose={reset}
       setOpen={setOpen}
       name={`${purpose} Employee`}
       className="max-w-3xl"
@@ -156,8 +165,8 @@ const EmployeeDialog = ({
         <div className="grid grid-cols-3">
           <Upload
             register={register("image")}
-            value={image}
             error={errors.image}
+            value={image}
             loading={uploadLoading}
             onChange={handleChange}
           />
