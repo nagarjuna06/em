@@ -1,7 +1,26 @@
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import { convertMask } from "../utils";
-const Employee = ({ children, ...props }) => {
+import EmployeeDialog from "./EmployeeDialog";
+import Button from "./ui/button";
+import { PencilIcon, Trash2Icon } from "lucide-react";
+import { apiDeleteEmployee } from "../apis/employee";
+import useApi from "../hooks/use-api";
+const Employee = ({ refetch, ...props }) => {
+  const { fn, loading } = useApi(apiDeleteEmployee, {
+    success: true,
+  });
+
+  const handleDelete = async (id) => {
+    const confirmation = confirm(
+      "Are you sure you want to delete this Employee?"
+    );
+    if (confirmation) {
+      await fn(id);
+      await refetch();
+    }
+  };
+
   return (
     <tr className="hover">
       <td>{props.id}</td>
@@ -29,7 +48,29 @@ const Employee = ({ children, ...props }) => {
       <td>{props.course.join(",")}</td>
       <td>{formatDistanceToNow(props.createdAt, { addSuffix: true })}</td>
       <td>{formatDistanceToNow(props.updatedAt, { addSuffix: true })}</td>
-      {children}
+      <td>
+        <EmployeeDialog
+          defaultValues={props}
+          id={props.id}
+          purpose="Update"
+          trigger={
+            <Button size="icon">
+              <PencilIcon size={20} />
+            </Button>
+          }
+          cb={refetch}
+        />
+      </td>
+      <td>
+        <Button
+          onClick={() => handleDelete(props.id)}
+          className="text-error"
+          size="icon"
+          disabled={loading}
+        >
+          <Trash2Icon size={20} />
+        </Button>
+      </td>
     </tr>
   );
 };

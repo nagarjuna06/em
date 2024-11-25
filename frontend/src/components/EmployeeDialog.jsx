@@ -209,7 +209,7 @@ const EmployeeDialog = ({
         <Button
           className="w-full"
           type="submit"
-          loading={createLoading || uploadLoading}
+          loading={createLoading || updateLoading}
           disabled={uploadLoading}
         >
           {purpose}
