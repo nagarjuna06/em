@@ -82,7 +82,7 @@ const EmployeesList = () => {
     );
     if (confirmation) {
       await deleteEmployee(id);
-      await refetch();
+      await onUpdate();
     }
   };
 
@@ -101,7 +101,7 @@ const EmployeesList = () => {
                     <PencilIcon size={20} />
                   </Button>
                 }
-                cb={refetch}
+                cb={onUpdate}
               />
             </td>
             <td>
