@@ -81,7 +81,7 @@ export const getEmployeesController = async (req, res) => {
 
   const total = await employeeModel.countDocuments(query);
 
-  const pages = Math.round(total / limit);
+  const pages = Math.ceil(total / limit);
 
   return res.status(200).json({
     success: true,
