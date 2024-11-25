@@ -176,7 +176,9 @@ const EmployeesList = () => {
               className="w-20"
               options={limitOptions}
               value={limit}
-              onChange={(e) => updateSearchParams({ limit: e.target.value })}
+              onChange={(e) =>
+                updateSearchParams({ limit: e.target.value, page: 1 })
+              }
             />
           )}
           <Pagination
